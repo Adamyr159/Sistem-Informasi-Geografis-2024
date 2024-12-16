@@ -12,4 +12,9 @@ class Province extends Model
     // public function regency(): HasMany{
     //     return $this->hasMany(Regency::class);
     // }
+
+    public function provinceDatas(): HasMany
+    {
+        return $this->hasMany(ProvinceData::class);
+    }
 }
