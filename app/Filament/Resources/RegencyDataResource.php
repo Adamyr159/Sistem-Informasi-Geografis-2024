@@ -50,24 +50,29 @@ class RegencyDataResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultPaginationPageOption(50)
+            ->defaultGroup('regency.name')
+            ->groups([
+                Tables\Grouping\Group::make('regency.name')->titlePrefixedWithLabel(false)->collapsible()
+            ])
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('id')
+                //     ->label('ID')
+                //     ->sortable(),
 
-                Tables\Columns\TextColumn::make('regency.name')
-                    ->label('Regency')
-                    ->sortable()
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('regency.name')
+                //     ->label('Regency')
+                //     ->sortable()
+                //     ->searchable(),
+
+                Tables\Columns\TextColumn::make('year')
+                    ->label('Year')
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('nameData.name')
                     ->label('Name Data')
                     ->sortable()
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('year')
-                    ->label('Year')
-                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('amount')
                     ->formatStateUsing(fn(string $state): string => number_format((int) $state, 0, ',', '.'))

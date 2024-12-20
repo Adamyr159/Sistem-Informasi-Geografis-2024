@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProvinceSeeder::class,
             RegencySeeder::class,
+            NonSpasialSeeder::class,
+            KaltengSeeder::class,
         ]);
     }
 }
