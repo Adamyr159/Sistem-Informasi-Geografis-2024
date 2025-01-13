@@ -1,7 +1,6 @@
 <?php
 
+use App\Http\Controllers\PetaController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PetaController::class, 'index']);
