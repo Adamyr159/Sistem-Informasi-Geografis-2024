@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Regency extends Model
 {
-    protected $fillable = ['id', 'province_id', 'name', 'alt_name', 'latitude', 'longitude'];
+    protected $fillable = ['id', 'province_id', 'name', 'alt_name', 'latitude', 'longitude', 'geojson_path'];
 
-    public function province (): BelongsTo {
+    public function province(): BelongsTo
+    {
         return $this->belongsTo(Province::class);
     }
 
-    public function regencyDatas (): HasMany {
+    public function regencyDatas(): HasMany
+    {
         return $this->hasMany(RegencyData::class);
     }
 }

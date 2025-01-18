@@ -19,6 +19,10 @@ class ProvinceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Geo Data';
+
+    protected static ?int $navigationSort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -35,6 +39,10 @@ class ProvinceResource extends Resource
                 Forms\Components\TextInput::make('longitude')
                     ->required()
                     ->numeric(),
+                Forms\Components\FileUpload::make('geojson_path')
+                    ->directory('geojson/provinces')
+                    ->previewable(false)
+                    ->label('GeoJSON File'),
             ]);
     }
 

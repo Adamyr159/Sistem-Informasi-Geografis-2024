@@ -19,6 +19,10 @@ class RegencyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Geo Data';
+
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -38,6 +42,9 @@ class RegencyResource extends Resource
                 Forms\Components\TextInput::make('longitude')
                     ->required()
                     ->numeric(),
+                Forms\Components\FileUpload::make('geojson_path')
+                    ->directory('geojson/regencies')
+                    ->label('GeoJSON File'),
             ]);
     }
 
