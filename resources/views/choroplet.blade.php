@@ -1,13 +1,14 @@
-@extends('layouts.map')
+@extends('layouts.app')
 
 @php
     $province_name = ucwords(strtolower($province->name));
+    $hasMap = true;
 @endphp
 
 @section('page-title', "Peta {$province_name}")
 
 @section('content')
-    <div class="flex flex-col justify-center items-center gap-6 px-4 py-8">
+    <div class="flex flex-col justify-center items-center gap-6 px-4 py-8 mt-24">
         <h1 class="text-4xl font-semibold capitalize">Peta {{ $province_name }}</h1>
         <div class="flex flex-col items-center gap-2">
             <h2 class="text-xl">Information</h2>
@@ -33,10 +34,12 @@
             </div>
         </div>
     </div>
+    <div id="map" class="h-[500px] rounded-2xl"></div>
+
 @endsection
 
 @section('latlong', "[$province->latitude, $province->longitude]")
-@section('zoom', 8)
+@section('zoom', 7)
 
 @push('scripts')
     <script>

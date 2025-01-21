@@ -1,59 +1,18 @@
-@extends('layouts.map')
+@extends('layouts.app')
 
 @section('page-title', 'Peta Indonesia')
 
+@php
+    $hasMap = false;
+@endphp
 @section('content')
-    <div class="flex flex-col justify-center items-center gap-6 px-4 py-8">
-        <h1 class="text-4xl font-semibold ">Peta Indonesia</h1>
-        <div class="flex flex-col items-center gap-2">
-            <h2 class="text-xl">Information</h2>
-            <div class="flex items-center justify-center flex-wrap text-sm gap-2">
-                <a href="/?show=provincies"
-                    class="py-2 px-4 border rounded-full transition duration-300 {{ $show == 'provincies' ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-300' : 'border-slate-400 hover:bg-slate-100' }}">
-                    Provincies
-                </a>
-                <a href="/?show=regencies"
-                    class="py-2 px-4 border rounded-full transition duration-300 {{ $show == 'regencies' ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-300' : 'border-slate-400 hover:bg-slate-100' }}">
-                    Regencies
-                </a>
-                <a href="/?show=earth-quakes"
-                    class="py-2 px-4 border rounded-full  transition duration-300 {{ $show == 'earth-quakes' ? 'bg-blue-500 text-white hover:bg-blue-300' : 'border-slate-400 hover:bg-slate-100' }}">
-                    Earth Quakes
-                </a>
-                <a href="{{ route('choroplet') }}"
-                    class="py-2 px-4 border rounded-full  transition duration-300 border-slate-400 hover:bg-slate-100">
-                    Choroplet
-                </a>
-            </div>
+    <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div class="text-center">
+            <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
+                Jelajahi Peta Indonesia</h1>
+            <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">Temukan informasi
+                geografis lengkap seperti data provinsi, kabupaten/kota, gempa bumi terkini, hingga peta
+                tematik untuk berbagai analisis.</p>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        const data = @json($data);
-        const show = '{{ $show }}';
-
-        // render marker
-        switch (show) {
-            case 'earth-quakes':
-                data.Infogempa.gempa.forEach(gempa => {
-                    const latlong = gempa.Coordinates.split(",");
-                    L.marker(latlong).addTo(map)
-                        .bindPopup(gempa.Wilayah + " - " + gempa.Tanggal);
-                });
-                break;
-            case 'regencies':
-                data.forEach(regency => {
-                    L.marker([regency.latitude, regency.longitude]).addTo(map)
-                        .bindPopup(`<b>${regency.name}</b><br>${regency.province.name}`);
-                });
-                break;
-            default:
-                data.forEach(provincy => {
-                    L.marker([provincy.latitude, provincy.longitude]).addTo(map)
-                        .bindPopup(provincy.name);
-                });
-        }
-    </script>
-@endpush

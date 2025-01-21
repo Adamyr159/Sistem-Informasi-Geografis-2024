@@ -22,7 +22,7 @@ class PetaController extends Controller
             default => Province::with('provinceDatas')->get()
         };
 
-        return view('index', compact('data', 'show'));
+        return view('geo-map', compact('data', 'show'));
     }
 
     private function getEarthquakeData()
