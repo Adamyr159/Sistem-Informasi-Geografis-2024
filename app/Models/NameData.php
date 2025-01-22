@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NameData extends Model
 {
-    protected $fillable = ['id', 'name', 'category_id'];
+    protected $fillable = ['id', 'name', 'category_id', 'unit'];
 
     public function provinceDatas(): HasMany
     {

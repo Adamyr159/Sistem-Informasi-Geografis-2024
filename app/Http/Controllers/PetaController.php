@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Regency;
 use App\Models\NameData;
 use App\Models\Province;
-use App\Models\Regency;
-use App\Models\ProvinceData;
 use App\Models\RegencyData;
+use App\Models\ProvinceData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -84,9 +84,11 @@ class PetaController extends Controller
 
         if ($provinceData) {
             $geojson['features'][0]['properties']['value'] = $provinceData->amount;
+            $geojson['features'][0]['properties']['unit'] = $provinceData->nameData->unit;
             $geojson['properties']['value'] = $provinceData->amount;
             $geojson['properties']['name'] = $province->name;
             $geojson['properties']['data_name'] = $provinceData->nameData->name;
+            $geojson['features'][0]['properties']['data_name'] = $provinceData->nameData->name;
             $geojson['properties']['category'] = $provinceData->nameData->category->name;
         }
 
@@ -110,9 +112,11 @@ class PetaController extends Controller
 
             if ($regencyData) {
                 $regencyGeojson['features'][0]['properties']['value'] = $regencyData->amount;
+                $regencyGeojson['features'][0]['properties']['unit'] = $regencyData->nameData->unit;
                 $regencyGeojson['properties']['value'] = $regencyData->amount;
                 $regencyGeojson['properties']['name'] = $regency->name;
                 $regencyGeojson['properties']['data_name'] = $regencyData->nameData->name;
+                $regencyGeojson['features'][0]['properties']['data_name'] = $regencyData->nameData->name;
                 $regencyGeojson['properties']['category'] = $regencyData->nameData->category->name;
             }
 

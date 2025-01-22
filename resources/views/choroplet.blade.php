@@ -43,7 +43,7 @@
 
 @push('scripts')
     <script>
-        let geojson, info, legend;
+        let geojson, info, legend, dataTypeSelect;
         const provinceId = {{ $province->id }};
 
         // Info control
@@ -54,8 +54,10 @@
             return this._div;
         };
         info.update = function(props) {
+            let formattedValue = "Data Belum Tersedia";
+            if (props && props.value) formattedValue = new Intl.NumberFormat().format(props ? props.value : 0);
             this._div.innerHTML = props ?
-                `<b>${props.name}</b><br>${props.value} ${props.unit || ''}` :
+                `<b>${props.name}</b><br>${formattedValue} ${props.unit || ''}` :
                 'Hover over an area';
         };
         info.addTo(map);
@@ -65,16 +67,41 @@
             position: 'bottomright'
         });
 
-        function getColor(value, maxValue) {
+        function getColor(value, maxValue, property) {
             const percentage = maxValue ? value / maxValue : 0;
-            return percentage > 0.9 ? '#800026' :
-                percentage > 0.7 ? '#BD0026' :
-                percentage > 0.5 ? '#E31A1C' :
-                percentage > 0.3 ? '#FC4E2A' :
-                percentage > 0.2 ? '#FD8D3C' :
-                percentage > 0.1 ? '#FEB24C' :
-                percentage > 0.05 ? '#FED976' :
-                '#FFEDA0';
+            const colors = {
+                "Luas Wilayah": ['#FF0000', '#FFCCCC'], // Pink (gelap ke terang)
+                "Populasi": ['#2b681e', '#b3e5a8'], // Merah
+                "SMA": ['#505050', '#D9D9D9'], // Abu-abu
+                "Lulusan SMA": ['#0000FF', '#99CCFF'], // Biru
+                "Universitas / Sederajat": ['#0000FF', '#99CCFF'], // Biru
+                "Lulusan S1": ['#FFD700', '#FFF5CC'], // Kuning
+                "Pengangguran": ['#008000', '#99FF99'] // Hijau
+            };
+
+            const colorScale = colors[property] || ['#FFFFFF', '#E0E0E0']; // Default warna jika properti tidak ditemukan
+
+            return percentage > 0.9 ? colorScale[0] :
+                percentage > 0.7 ? lightenColor(colorScale[0], 0.2) :
+                percentage > 0.5 ? lightenColor(colorScale[0], 0.4) :
+                percentage > 0.3 ? lightenColor(colorScale[0], 0.6) :
+                percentage > 0.1 ? lightenColor(colorScale[0], 0.8) :
+                colorScale[1];
+        }
+
+        function lightenColor(color, percentage) {
+            // Fungsi untuk mencerahkan warna
+            const num = parseInt(color.slice(1), 16),
+                amt = Math.round(2.55 * (percentage * 100)),
+                R = (num >> 16) + amt,
+                G = (num >> 8 & 0x00FF) + amt,
+                B = (num & 0x0000FF) + amt;
+
+            return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + 
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + 
+                (B < 255 ? B < 1 ? 0 : B : 255))
+                .toString(16)
+                .slice(1)}`;
         }
 
         function style(feature, maxValue) {
@@ -84,7 +111,7 @@
                 color: 'white',
                 dashArray: '3',
                 fillOpacity: 0.7,
-                fillColor: getColor(feature.properties.value || 0, maxValue)
+                fillColor: getColor(feature.properties.value || 0, maxValue, feature.properties.data_name)
             };
         }
 
@@ -138,7 +165,7 @@
                     onEachFeature
                 }).addTo(map);
 
-                updateLegend(maxValue, data.features[0]?.properties?.data_name);
+                updateLegend(maxValue, data.properties?.data_name);
             } catch (error) {
                 console.error('Error loading GeoJSON:', error);
             }

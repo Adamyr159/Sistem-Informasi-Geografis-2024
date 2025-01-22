@@ -35,6 +35,11 @@ class NameDataResource extends Resource
                     ->relationship('category', 'name') // Relasi dengan tabel categories
                     ->required()
                     ->preload(),
+
+                Forms\Components\TextInput::make('unit')
+                    ->label('Unit')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -51,6 +56,11 @@ class NameDataResource extends Resource
                     ->sortable()
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('unit')
+                    ->label('Unit')
+                    ->sortable()
+                    ->searchable(),
+                    
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Kategori')
                     ->sortable()
